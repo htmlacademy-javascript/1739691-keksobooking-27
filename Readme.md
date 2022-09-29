@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг»
 
 * Студент: [Максим Щенников](https://up.htmlacademy.ru/javascript/27/user/1739691).
-* Наставник: `Неизвестно`.
+* Наставник: `Роман Макаров`. (https://htmlacademy.ru/profile/deepspiral)
 
 ---
 
