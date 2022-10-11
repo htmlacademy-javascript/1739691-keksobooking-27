@@ -28,8 +28,6 @@ function getRandomPositiveInteger (a, b) {
   // потому что Math.random() генерирует только дробные числа и ноль.
   return Math.floor(result);
 }
-getRandomPositiveInteger(2, 6);
-
 
 // Функция взята из интернета и доработана
 // Источник - https://github.com/you-dont-need/You-Dont-Need-Lodash-Underscore#_random
@@ -57,4 +55,52 @@ function getRandomPositiveFloat (a, b, digits = 1) {
   return +result.toFixed(digits);
 }
 
-getRandomPositiveFloat(2, 6, 4);
+const RANDOM_OBJECTS = 10;
+
+const LOCATION = {
+  x: getRandomPositiveFloat(35.65000, 35.70000, 5),
+  y: getRandomPositiveFloat(139.70000, 139.80000, 5)
+};
+
+const OFFER = {
+  title: ['Лучшее предложение', '5 минут до центра', 'Новинка', 'Низкая цена', 'Предложение недели'],
+  type: ['palace', 'flat', 'house', 'bungalow', 'hotel'],
+  address: '{{location.lat}}, {{location.lng}}',
+  price: 0,
+  rooms: 0,
+  guest: 0,
+  checkin: ['12:00', '13:00', '14:00'],
+  checkout: ['12:00', '13:00', '14:00'],
+  features: ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'],
+  description: ['Описание1', 'Описание2', 'Описание3', 'Описание4', 'Описание5', 'Описание6', 'Описание7'],
+  photos: ['https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/duonguyen-8LrGtIxxa4w.jpg', 'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/brandon-hoogenboom-SNxQGWxZQi0.jpg', 'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/claire-rendall-b6kAwr1i0Iw.jpg']
+};
+
+const getRandomArrayElement = (elements) => elements[getRandomPositiveInteger(0, elements.length - 1)];
+
+const createObject = () => ({
+  author: {
+    avatar: `img/avatars/user${ `${getRandomPositiveInteger(1, 10)}`.padStart(2, '0') }.png`
+  },
+  offer: {
+    title: getRandomArrayElement(OFFER.title),
+    type: getRandomArrayElement(OFFER.type),
+    address: `${LOCATION.x}, ${LOCATION.y}`,
+    price: getRandomPositiveInteger (5000, 6000),
+    rooms: getRandomPositiveInteger(2, 10),
+    guest: getRandomPositiveInteger(1, 4),
+    checkin: getRandomArrayElement(OFFER.checkin),
+    checkout: getRandomArrayElement(OFFER.checkout),
+    features: getRandomArrayElement(OFFER.features),
+    description: getRandomArrayElement(OFFER.description),
+    photos: getRandomArrayElement(OFFER.photos)
+  },
+  location: {
+    lat: `${LOCATION.x}`,
+    lng: `${LOCATION.y}`
+  }
+});
+
+const createObjects = Array.from({length: RANDOM_OBJECTS}, createObject);
+
+createObjects();
