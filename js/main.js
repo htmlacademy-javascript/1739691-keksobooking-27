@@ -1,7 +1,4 @@
-import './data.js';
-import './util.js';
-import './card.js';
-
+import {renderObjects} from './card.js';
 import {createObjects} from './data.js';
 
-createObjects();
+renderObjects(createObjects());
