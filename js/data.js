@@ -1,4 +1,4 @@
-import {getRandomPositiveInteger, getRandomPositiveFloat, getRandomArrayElement} from './util.js';
+import {getRandomPositiveInteger, getRandomPositiveFloat, getRandomArrayElement, getRandomArray} from './util.js';
 
 const RANDOM_OBJECTS = 10;
 
@@ -45,7 +45,7 @@ const createObject = (index) => ({
     guest: getRandomPositiveInteger(ROOM_GUEST_MIN, ROOM_GUEST_MAX),
     checkin: getRandomArrayElement(OFFER.checkin),
     checkout: getRandomArrayElement(OFFER.checkout),
-    features: getRandomArrayElement(OFFER.features),
+    features: getRandomArray(OFFER.features),
     description: getRandomArrayElement(OFFER.description),
     photos: getRandomArrayElement(OFFER.photos)
   },
