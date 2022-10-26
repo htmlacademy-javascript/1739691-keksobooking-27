@@ -10,7 +10,7 @@ const apartType = {
   hotel: 'Отель'
 };
 
-const renderObjects = (objects) => {
+const renderAccomodationOffer = (objects) => {
   const popupFragment = document.createDocumentFragment();
 
   objects.forEach(({author:{avatar}, offer:{title, address, price, type, description, rooms, guest, checkin, checkout, features, photos}}) => {
@@ -33,4 +33,4 @@ const renderObjects = (objects) => {
   mapCanvas.appendChild(popupFragment);
 };
 
-export {renderObjects};
+export {renderAccomodationOffer};
