@@ -1,3 +1,5 @@
+import {createObjects} from './data.js';
+
 const card = document.querySelector('#card').content.querySelector('.popup');
 const mapCanvas = document.querySelector('#map-canvas');
 
@@ -10,10 +12,10 @@ const apartType = {
   hotel: 'Отель'
 };
 
-const renderAccomodationOffer = (objects) => {
+const renderAccomodationOffer = () => {
   const popupFragment = document.createDocumentFragment();
 
-  objects.forEach(({author:{avatar}, offer:{title, address, price, type, description, rooms, guest, checkin, checkout, features, photos}}) => {
+  createObjects().forEach(({author:{avatar}, offer:{title, address, price, type, description, rooms, guest, checkin, checkout, features, photos}}) => {
     const offerElement = card.cloneNode(true);
 
     offerElement.querySelector('.popup__title').textContent = title;

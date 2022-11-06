@@ -1,6 +1,20 @@
 const userForm = document.querySelector('.ad-form');
 const roomNumber = userForm.querySelector('#room_number');
 const roomCapacity = userForm.querySelector('#capacity');
+const title = userForm.querySelector('#title');
+const price = userForm.querySelector('#price');
+const type = userForm.querySelector('#type');
+
+const apartPrice = {
+  minPrice: {
+    bungalow: 0,
+    flat: 1000,
+    hotel: 3000,
+    house: 5000,
+    palace: 10000,
+  },
+  maxPrice: 100000
+};
 
 const roomsAndGuests = {
   '1 комната': ['для 1 гостя'],
@@ -16,30 +30,54 @@ const pristine = new Pristine(userForm, {
 }, true
 );
 
-const validateTitle = (value) =>
-  value.length >= 30 && value.length <= 100;
+const validateTitle = () =>
+  title.length >= 30 && title.length <= 100;
 
-pristine.addValidator(
-  userForm.querySelector('#title'),
-  validateTitle
-);
+const getTitleErrorMessage = () => `Длинна заголовка должна быть от 30 до 100 символов. Сейчас ${title.value.length} символов`;
+
+const validatePrice = () =>
+  price >= apartPrice.minPrice[type.value] && price <= apartPrice.maxPrice;
+
+const getPriceErrorMessage = () => `Введите стоимость от ${apartPrice.minPrice[type.value]} до ${apartPrice.maxPrice}`;
 
 const validateRoomsAndGuests = () => roomsAndGuests[roomNumber.value].includes(roomCapacity.value);
 
-function getAccomodationErrorMessage () {
-  return `
+const getAccomodationErrorMessage = () =>
+  `
   ${roomNumber.value}
   ${roomCapacity.value}
   ${roomNumber.value === '1 комната' ? 'недоступна' : 'недоступны'}
-  `;
-}
+`;
 
-pristine.addValidator(roomNumber, validateRoomsAndGuests, getAccomodationErrorMessage);
-pristine.addValidator(roomCapacity, validateRoomsAndGuests, getAccomodationErrorMessage);
+const getUserFormValidation = () => {
+  pristine.addValidator(
+    title,
+    validateTitle,
+    getTitleErrorMessage
+  );
+
+  pristine.addValidator(
+    price,
+    validatePrice,
+    getPriceErrorMessage
+  );
+
+  pristine.addValidator(
+    roomNumber,
+    validateRoomsAndGuests,
+    getAccomodationErrorMessage
+  );
+
+  pristine.addValidator(
+    roomCapacity,
+    validateRoomsAndGuests,
+    getAccomodationErrorMessage
+  );
+};
 
 userForm.addEventListener('submit', (evt) => {
   evt.preventDefault();
   pristine.validate();
 });
 
-
+export {getUserFormValidation};
