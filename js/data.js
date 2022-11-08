@@ -1,6 +1,6 @@
 import {getRandomPositiveInteger, getRandomPositiveFloat, getRandomArrayElement, getRandomArray} from './util.js';
 
-const RANDOM_OBJECTS = 10;
+const RANDOM_OBJECTS = 1;
 
 const LOCATION = {
   x: getRandomPositiveFloat(35.65000, 35.70000, 5),

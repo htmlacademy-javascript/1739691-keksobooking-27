@@ -4,6 +4,8 @@ const roomCapacity = userForm.querySelector('#capacity');
 const title = userForm.querySelector('#title');
 const price = userForm.querySelector('#price');
 const type = userForm.querySelector('#type');
+const checkInTime = userForm.querySelector('#timein');
+const checkOutTime = userForm.querySelector('#timeout');
 
 const apartPrice = {
   minPrice: {
@@ -22,13 +24,6 @@ const roomsAndGuests = {
   '3 комната': ['для 3 гостей', 'для 2 гостей', 'для 1 гостя'],
   '100 комнат': ['не для гостей']
 };
-
-const pristine = new Pristine(userForm, {
-  classTo: 'ad-form__element',
-  errorTextParent: 'ad-form__element',
-  errorTextClass: 'ad-form__element--invalid',
-}, true
-);
 
 const validateTitle = () =>
   title.length >= 30 && title.length <= 100;
@@ -49,7 +44,28 @@ const getAccomodationErrorMessage = () =>
   ${roomNumber.value === '1 комната' ? 'недоступна' : 'недоступны'}
 `;
 
+const onRoomTypeChange = () => {
+  const minRoomPrice = apartPrice.minPrice[type.value];
+  price.placeholder = minRoomPrice;
+  price.min = minRoomPrice;
+};
+
+const onCheckInTimeChange = () => {
+  checkInTime.value = checkOutTime.value;
+};
+
+const onCheckOutTimeChange = () => {
+  checkOutTime.value = checkInTime.value;
+};
+
 const getUserFormValidation = () => {
+  const pristine = new Pristine(userForm, {
+    classTo: 'ad-form__element',
+    errorTextParent: 'ad-form__element',
+    errorTextClass: 'ad-form__element--invalid',
+  }, true
+  );
+
   pristine.addValidator(
     title,
     validateTitle,
@@ -73,11 +89,15 @@ const getUserFormValidation = () => {
     validateRoomsAndGuests,
     getAccomodationErrorMessage
   );
-};
 
-userForm.addEventListener('submit', (evt) => {
-  evt.preventDefault();
-  pristine.validate();
-});
+  checkInTime.addEventListener('change', onCheckOutTimeChange);
+  checkOutTime.addEventListener('change', onCheckInTimeChange);
+  type.addEventListener('change', onRoomTypeChange);
+
+  userForm.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+    pristine.validate();
+  });
+};
 
 export {getUserFormValidation};
