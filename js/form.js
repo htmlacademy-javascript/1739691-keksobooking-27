@@ -8,13 +8,13 @@ const mapFiltersSelect = mapFilters.querySelectorAll('select');
 
 const disableElements = (elements) => {
   elements.forEach((element) => {
-    element.disable(true);
+    element.disabled = true;
   });
 };
 
 const activeElements = (elements) => {
   elements.forEach((element) => {
-    element.disable(false);
+    element.disabled = false;
   });
 };
 
