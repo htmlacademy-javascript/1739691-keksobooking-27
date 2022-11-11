@@ -6,6 +6,8 @@ const price = userForm.querySelector('#price');
 const type = userForm.querySelector('#type');
 const checkInTime = userForm.querySelector('#timein');
 const checkOutTime = userForm.querySelector('#timeout');
+const slider = document.querySelector('.ad-form__slider');
+const reset = document.querySelector('.ad-form__reset');
 
 const apartPrice = {
   minPrice: {
@@ -17,6 +19,28 @@ const apartPrice = {
   },
   maxPrice: 100000
 };
+
+noUiSlider.create(slider, {
+  range: {
+    min: 0,
+    max: apartPrice.maxPrice
+  },
+  start: price.placeholder,
+  step: 100,
+  connect: 'lower',
+  format: {
+    to: function (value) {
+      return value.toFixed(0);
+    },
+    from: function (value) {
+      return parseFloat(value);
+    },
+  },
+});
+
+slider.noUiSlider.on('update', () => {
+  price.value = slider.noUiSlider.get();
+});
 
 const roomsAndGuests = {
   '1 комната': ['для 1 гостя'],
@@ -45,9 +69,11 @@ const getAccomodationErrorMessage = () =>
 `;
 
 const onRoomTypeChange = () => {
-  const minRoomPrice = apartPrice.minPrice[type.value];
-  price.placeholder = minRoomPrice;
-  price.min = minRoomPrice;
+  price.placeholder = apartPrice.minPrice[type.value];
+  price.min = apartPrice.minPrice[type.value];
+  slider.noUiSlider.updateOptions({
+    start: price.placeholder,
+  });
 };
 
 const onCheckInTimeChange = () => {
@@ -62,7 +88,7 @@ const getUserFormValidation = () => {
   const pristine = new Pristine(userForm, {
     classTo: 'ad-form__element',
     errorTextParent: 'ad-form__element',
-    errorTextClass: 'ad-form__element--invalid',
+    errorTextClass: 'ad-form__element--invalid'
   }, true
   );
 
@@ -92,12 +118,23 @@ const getUserFormValidation = () => {
 
   checkInTime.addEventListener('change', onCheckOutTimeChange);
   checkOutTime.addEventListener('change', onCheckInTimeChange);
-  type.addEventListener('change', onRoomTypeChange);
+
+  type.addEventListener('change', () => {
+    onRoomTypeChange();
+    if (price.value) {
+      pristine.validate();
+    }
+  });
 
   userForm.addEventListener('submit', (evt) => {
     evt.preventDefault();
     pristine.validate();
   });
 };
+
+reset.addEventListener('click', (evt) => {
+  evt.preventDefault();
+  slider.noUiSlider.reset();
+});
 
 export {getUserFormValidation};

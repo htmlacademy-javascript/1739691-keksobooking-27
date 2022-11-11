@@ -2,6 +2,7 @@
 <html lang="ru">
 <head>
   <meta charset="utf-8">
+  <link rel="stylesheet" href="vendor/nouislider/nouislider.css">
   <link rel="stylesheet" href="vendor/leaflet/leaflet.css">
   <link rel="stylesheet" href="css/normalize.css">
   <link rel="stylesheet" href="css/style.css">
@@ -107,7 +108,7 @@
         </fieldset>
         <fieldset class="ad-form__element">
           <label class="ad-form__label" for="price">Цена за ночь, руб.</label>
-          <input id="price" name="price" type="number" placeholder="5000" required
+          <input id="price" name="price" type="number" placeholder="5000" required min="0"
           data-pristine-required-message="Обязательное поле">
           <div class="ad-form__slider"></div>
         </fieldset>
@@ -231,6 +232,7 @@
       <button type="button" class="error__button">Попробовать снова</button>
     </div>
   </template>
+  <script src="vendor/nouislider/nouislider.js"></script>
   <script src="vendor/leaflet/leaflet.js"></script>
   <script src="vendor/pristine/pristine.min.js"></script>
   <script src="js/main.js" type="module"></script>

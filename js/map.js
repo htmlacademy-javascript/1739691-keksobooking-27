@@ -2,16 +2,16 @@ import {activeForm} from './form.js';
 import {renderAccomodationOffer} from './card.js';
 import {createObjects} from './data.js';
 
-const map = L.map('map-canvas');
-const resetButton = document.querySelector('.ad-form__reset');
-const address = document.querySelector('#address');
-
 const TOKYO_CENTER = {
   lat: 35.68091,
   lng: 139.76529
 };
 
 const MAP_ZOOM = 10;
+
+const map = L.map('map-canvas');
+const resetButton = document.querySelector('.ad-form__reset');
+const address = document.querySelector('#address');
 
 const loadMap = () => {
   map.on('load', () => {
@@ -58,9 +58,8 @@ const createPin = (point) => {
     .bindPopup(renderAccomodationOffer(point));
 };
 
-createObjects().forEach((point) => {
-  createPin(point);
-});
+createObjects().forEach(createPin);
+
 const mainMarker = L.marker(
   {
     lat: TOKYO_CENTER.lat,
@@ -88,7 +87,7 @@ resetButton.addEventListener('click', () => {
 
 mainMarker.on('moveend', (evt) => {
   const newAddress = evt.target.getLatLng();
-  address.value = `lat:${newAddress.lat}, lng:${newAddress.lng}`;
+  address.value = `${(newAddress.lat).toFixed(5)}, ${(newAddress.lng).toFixed(5)}`;
 });
 
 export {loadMap};
