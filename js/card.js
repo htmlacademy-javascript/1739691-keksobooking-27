@@ -1,7 +1,4 @@
-import {createObjects} from './data.js';
-
 const card = document.querySelector('#card').content.querySelector('.popup');
-const mapCanvas = document.querySelector('#map-canvas');
 
 const apartType = {
   flat: 'Квартира',
@@ -37,7 +34,5 @@ const renderAccomodationOffer = (object) => {
 
   return offerElement;
 };
-
-mapCanvas.appendChild(renderAccomodationOffer(createObjects()[0]));
 
 export {renderAccomodationOffer};

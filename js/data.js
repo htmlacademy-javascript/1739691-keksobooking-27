@@ -3,9 +3,18 @@ import {getRandomPositiveInteger, getRandomPositiveFloat, getRandomArrayElement,
 const RANDOM_OBJECTS = 10;
 
 const LOCATION = {
-  x: getRandomPositiveFloat(35.65000, 35.70000, 5),
-  y: getRandomPositiveFloat(139.70000, 139.80000, 5)
+  minX: 35.65000,
+  maxX: 35.70000,
+  minY: 139.70000,
+  maxY: 139.80000,
 };
+
+const DIGITS = 5;
+
+const GET_LOCATION = () => ({
+  lat: getRandomPositiveFloat(LOCATION.minX, LOCATION.maxX, DIGITS),
+  lng: getRandomPositiveFloat(LOCATION.minY, LOCATION.maxY, DIGITS)
+});
 
 const ROOM_PRICE_MIN = 3000;
 const ROOM_PRICE_MAX = 60000;
@@ -15,7 +24,6 @@ const ROOM_AMOUNT_MAX = 5;
 
 const ROOM_GUEST_MIN = 1;
 const ROOM_GUEST_MAX = 4;
-
 
 const OFFER = {
   title: ['Лучшее предложение', '5 минут до центра', 'Новинка', 'Низкая цена', 'Предложение недели'],
@@ -39,7 +47,7 @@ const createObject = (index) => ({
   offer: {
     title: getRandomArrayElement(OFFER.title),
     type: getRandomArrayElement(OFFER.type),
-    address: `${LOCATION.x}, ${LOCATION.y}`,
+    address: `${GET_LOCATION().lat}, ${GET_LOCATION().lng}`,
     price: getRandomPositiveInteger (ROOM_PRICE_MIN, ROOM_PRICE_MAX),
     rooms: getRandomPositiveInteger(ROOM_AMOUNT_MIN, ROOM_AMOUNT_MAX),
     guest: getRandomPositiveInteger(ROOM_GUEST_MIN, ROOM_GUEST_MAX),
@@ -50,8 +58,8 @@ const createObject = (index) => ({
     photos: getRandomArrayElement(OFFER.photos)
   },
   location: {
-    lat: `${LOCATION.x}`,
-    lng: `${LOCATION.y}`
+    lat: `${GET_LOCATION().lat}`,
+    lng: `${GET_LOCATION().lng}`
   }
 });
 

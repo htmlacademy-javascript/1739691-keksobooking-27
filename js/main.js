@@ -1,10 +1,8 @@
-import {renderAccomodationOffer} from './card.js';
-import {createObjects} from './data.js';
-import {disableForm, activeForm} from './form.js';
 import {getUserFormValidation} from './user-form.js';
+import {disableForm} from './form.js';
+import {loadMap} from './map.js';
 
-renderAccomodationOffer(createObjects()[0]);
 
 getUserFormValidation();
 disableForm();
-activeForm();
+loadMap();
