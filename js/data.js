@@ -11,8 +11,11 @@ const LOCATION = {
 
 const DIGITS = 5;
 
-const GET_LOCATION = () => ({
-  lat: getRandomPositiveFloat(LOCATION.minX, LOCATION.maxX, DIGITS),
+const getLattitude = () => ({
+  lat: getRandomPositiveFloat(LOCATION.minX, LOCATION.maxX, DIGITS)
+});
+
+const getLongtitude = () => ({
   lng: getRandomPositiveFloat(LOCATION.minY, LOCATION.maxY, DIGITS)
 });
 
@@ -25,7 +28,7 @@ const ROOM_AMOUNT_MAX = 5;
 const ROOM_GUEST_MIN = 1;
 const ROOM_GUEST_MAX = 4;
 
-const OFFER = {
+const offer = {
   title: ['Лучшее предложение', '5 минут до центра', 'Новинка', 'Низкая цена', 'Предложение недели'],
   type: ['palace', 'flat', 'house', 'bungalow', 'hotel'],
   address: '{{location.lat}}, {{location.lng}}',
@@ -45,21 +48,21 @@ const createObject = (index) => ({
     avatar: createAuthor(index)
   },
   offer: {
-    title: getRandomArrayElement(OFFER.title),
-    type: getRandomArrayElement(OFFER.type),
-    address: `${GET_LOCATION().lat}, ${GET_LOCATION().lng}`,
-    price: getRandomPositiveInteger (ROOM_PRICE_MIN, ROOM_PRICE_MAX),
+    title: getRandomArrayElement(offer.title),
+    type: getRandomArrayElement(offer.type),
+    address: `${getLattitude().lat}, ${getLongtitude().lng}`,
+    price: getRandomPositiveInteger(ROOM_PRICE_MIN, ROOM_PRICE_MAX),
     rooms: getRandomPositiveInteger(ROOM_AMOUNT_MIN, ROOM_AMOUNT_MAX),
     guest: getRandomPositiveInteger(ROOM_GUEST_MIN, ROOM_GUEST_MAX),
-    checkin: getRandomArrayElement(OFFER.checkin),
-    checkout: getRandomArrayElement(OFFER.checkout),
-    features: getRandomArray(OFFER.features),
-    description: getRandomArrayElement(OFFER.description),
-    photos: getRandomArrayElement(OFFER.photos)
+    checkin: getRandomArrayElement(offer.checkin),
+    checkout: getRandomArrayElement(offer.checkout),
+    features: getRandomArray(offer.features),
+    description: getRandomArrayElement(offer.description),
+    photos: getRandomArrayElement(offer.photos)
   },
   location: {
-    lat: `${GET_LOCATION().lat}`,
-    lng: `${GET_LOCATION().lng}`
+    lat: `${getLattitude().lat}`,
+    lng: `${getLongtitude().lng}`
   }
 });
 
