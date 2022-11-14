@@ -11,14 +11,6 @@ const LOCATION = {
 
 const DIGITS = 5;
 
-const getLattitude = () => ({
-  lat: getRandomPositiveFloat(LOCATION.minX, LOCATION.maxX, DIGITS)
-});
-
-const getLongtitude = () => ({
-  lng: getRandomPositiveFloat(LOCATION.minY, LOCATION.maxY, DIGITS)
-});
-
 const ROOM_PRICE_MIN = 3000;
 const ROOM_PRICE_MAX = 60000;
 
@@ -27,6 +19,14 @@ const ROOM_AMOUNT_MAX = 5;
 
 const ROOM_GUEST_MIN = 1;
 const ROOM_GUEST_MAX = 4;
+
+const getLattitude = () => ({
+  lat: getRandomPositiveFloat(LOCATION.minX, LOCATION.maxX, DIGITS)
+});
+
+const getLongtitude = () => ({
+  lng: getRandomPositiveFloat(LOCATION.minY, LOCATION.maxY, DIGITS)
+});
 
 const offer = {
   title: ['Лучшее предложение', '5 минут до центра', 'Новинка', 'Низкая цена', 'Предложение недели'],
