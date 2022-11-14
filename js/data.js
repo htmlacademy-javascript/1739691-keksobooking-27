@@ -11,11 +11,6 @@ const LOCATION = {
 
 const DIGITS = 5;
 
-const GET_LOCATION = () => ({
-  lat: getRandomPositiveFloat(LOCATION.minX, LOCATION.maxX, DIGITS),
-  lng: getRandomPositiveFloat(LOCATION.minY, LOCATION.maxY, DIGITS)
-});
-
 const ROOM_PRICE_MIN = 3000;
 const ROOM_PRICE_MAX = 60000;
 
@@ -25,7 +20,12 @@ const ROOM_AMOUNT_MAX = 5;
 const ROOM_GUEST_MIN = 1;
 const ROOM_GUEST_MAX = 4;
 
-const OFFER = {
+const getLocation = () => ({
+  lat: getRandomPositiveFloat(LOCATION.minX, LOCATION.maxX, DIGITS),
+  lng: getRandomPositiveFloat(LOCATION.minY, LOCATION.maxY, DIGITS)
+});
+
+const offer = {
   title: ['Лучшее предложение', '5 минут до центра', 'Новинка', 'Низкая цена', 'Предложение недели'],
   type: ['palace', 'flat', 'house', 'bungalow', 'hotel'],
   address: '{{location.lat}}, {{location.lng}}',
@@ -40,28 +40,32 @@ const createAuthor = (index) => ({
   avatar: `img/avatars/user${index.toString().padStart(2, '0')}.png`
 });
 
-const createObject = (index) => ({
-  author: {
-    avatar: createAuthor(index)
-  },
-  offer: {
-    title: getRandomArrayElement(OFFER.title),
-    type: getRandomArrayElement(OFFER.type),
-    address: `${GET_LOCATION().lat}, ${GET_LOCATION().lng}`,
-    price: getRandomPositiveInteger (ROOM_PRICE_MIN, ROOM_PRICE_MAX),
-    rooms: getRandomPositiveInteger(ROOM_AMOUNT_MIN, ROOM_AMOUNT_MAX),
-    guest: getRandomPositiveInteger(ROOM_GUEST_MIN, ROOM_GUEST_MAX),
-    checkin: getRandomArrayElement(OFFER.checkin),
-    checkout: getRandomArrayElement(OFFER.checkout),
-    features: getRandomArray(OFFER.features),
-    description: getRandomArrayElement(OFFER.description),
-    photos: getRandomArrayElement(OFFER.photos)
-  },
-  location: {
-    lat: `${GET_LOCATION().lat}`,
-    lng: `${GET_LOCATION().lng}`
-  }
-});
+const createObject = (index) => {
+  const {lat, lng} = getLocation();
+
+  return {
+    author: {
+      avatar: createAuthor(index)
+    },
+    offer: {
+      title: getRandomArrayElement(offer.title),
+      type: getRandomArrayElement(offer.type),
+      address: `${lat}, ${lng}`,
+      price: getRandomPositiveInteger(ROOM_PRICE_MIN, ROOM_PRICE_MAX),
+      rooms: getRandomPositiveInteger(ROOM_AMOUNT_MIN, ROOM_AMOUNT_MAX),
+      guest: getRandomPositiveInteger(ROOM_GUEST_MIN, ROOM_GUEST_MAX),
+      checkin: getRandomArrayElement(offer.checkin),
+      checkout: getRandomArrayElement(offer.checkout),
+      features: getRandomArray(offer.features),
+      description: getRandomArrayElement(offer.description),
+      photos: getRandomArrayElement(offer.photos)
+    },
+    location: {
+      lat: `${lat}`,
+      lng: `${lng}`
+    }
+  };
+};
 
 const createObjects = () => Array.from({length: RANDOM_OBJECTS}, (_, index) => createObject(index + 1));
 
