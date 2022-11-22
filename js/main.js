@@ -1,8 +1,11 @@
-import {getUserFormValidation} from './user-form.js';
+import {setUserFormSubmit} from './user-form.js';
 import {disableForm} from './form.js';
 import {loadMap} from './map.js';
+import {getData} from './api.js';
+import {createPins} from './map.js';
 
 
-getUserFormValidation();
+getData(createPins);
+setUserFormSubmit();
 disableForm();
 loadMap();

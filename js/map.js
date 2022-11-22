@@ -1,6 +1,7 @@
 import {activeForm} from './form.js';
 import {renderAccomodationOffer} from './card.js';
-import {createObjects} from './data.js';
+// import {getData} from './api.js';
+// import {createObjects} from './data.js';
 
 const TOKYO_CENTER = {
   lat: 35.68091,
@@ -8,10 +9,23 @@ const TOKYO_CENTER = {
 };
 
 const MAP_ZOOM = 10;
+const PIN_AMOUNT = 10;
 
 const map = L.map('map-canvas');
 const resetButton = document.querySelector('.ad-form__reset');
 const address = document.querySelector('#address');
+
+const mainPin = L.icon({
+  iconUrl: './img/main-pin.svg',
+  iconSize: [52, 52],
+  iconAnchor: [26, 52],
+});
+
+const pin = L.icon({
+  iconUrl: './img/pin.svg',
+  iconSize: [40, 40],
+  iconAnchor: [20, 40],
+});
 
 const loadMap = () => {
   map.on('load', () => {
@@ -30,35 +44,25 @@ const loadMap = () => {
   ).addTo(map);
 };
 
-const mainPin = L.icon({
-  iconUrl: './img/main-pin.svg',
-  iconSize: [52, 52],
-  iconAnchor: [26, 52],
-});
 
-const pin = L.icon({
-  iconUrl: './img/pin.svg',
-  iconSize: [40, 40],
-  iconAnchor: [20, 40],
-});
+const createPins = (points) => {
+  points.slice(0, PIN_AMOUNT).forEach((point) => {
+    const {lat, lng} = point.location;
+    const marker = L.marker(
+      {
+        lat,
+        lng
+      },
+      {
+        pin,
+      },
+    );
+    marker
+      .addTo(map)
+      .bindPopup(renderAccomodationOffer(point));
+  });
 
-const createPin = (point) => {
-  const {lat, lng} = point.location;
-  const marker = L.marker(
-    {
-      lat,
-      lng
-    },
-    {
-      pin,
-    },
-  );
-  marker
-    .addTo(map)
-    .bindPopup(renderAccomodationOffer(point));
 };
-
-createObjects().forEach(createPin);
 
 const mainMarker = L.marker(
   {
@@ -90,5 +94,5 @@ mainMarker.on('moveend', (evt) => {
   address.value = `${(newAddress.lat).toFixed(5)}, ${(newAddress.lng).toFixed(5)}`;
 });
 
-export {loadMap};
+export {loadMap, createPins};
 
