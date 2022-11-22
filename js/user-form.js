@@ -1,3 +1,6 @@
+import {blockSubmitButton, unblockSubmitButton, showSuccessMessage, showErrorMessage} from './util.js';
+import {sendData} from './api.js';
+
 const userForm = document.querySelector('.ad-form');
 const roomNumber = userForm.querySelector('#room_number');
 const roomCapacity = userForm.querySelector('#capacity');
@@ -42,31 +45,37 @@ slider.noUiSlider.on('update', () => {
   price.value = slider.noUiSlider.get();
 });
 
-const roomsAndGuests = {
-  '1 комната': ['для 1 гостя'],
-  '2 комнаты': ['для 2 гостей', 'для 1 гостя'],
-  '3 комната': ['для 3 гостей', 'для 2 гостей', 'для 1 гостя'],
-  '100 комнат': ['не для гостей']
+const roomsToGuest = {
+  1: ['1'],
+  2: ['1', '2'],
+  3: ['1', '2', '3'],
+  100: ['0']
 };
 
-const validateTitle = () =>
-  title.length >= 30 && title.length <= 100;
+const guestToRooms = {
+  1: ['1', '2', '3'],
+  2: ['2', '3'],
+  3: ['3'],
+  0: ['100']
+};
+
+const validateTitle = (value) =>
+  value.length >= 30 && value.length <= 100;
 
 const getTitleErrorMessage = () => `Длинна заголовка должна быть от 30 до 100 символов. Сейчас ${title.value.length} символов`;
 
-const validatePrice = () =>
-  price >= apartPrice.minPrice[type.value] && price <= apartPrice.maxPrice;
 
-const getPriceErrorMessage = () => `Введите стоимость от ${apartPrice.minPrice[type.value]} до ${apartPrice.maxPrice}`;
+// const validatePrice = () => price.value >= apartPrice.minPrice[type.value] && price.value >= apartPrice.maxPrice[type.value];
 
-const validateRoomsAndGuests = () => roomsAndGuests[roomNumber.value].includes(roomCapacity.value);
+// const getPriceErrorMessage = () => `Введите стоимость от ${apartPrice.minPrice[type.value]} до ${apartPrice.maxPrice}`;
 
-const getAccomodationErrorMessage = () =>
-  `
-  ${roomNumber.value}
-  ${roomCapacity.value}
-  ${roomNumber.value === '1 комната' ? 'недоступна' : 'недоступны'}
-`;
+const validateCapacity = () => roomsToGuest[roomNumber.value].includes(roomCapacity.value);
+
+const getRoomsErrorMessage = () =>
+  `Указанное колличество комнат вмещает ${roomsToGuest[roomNumber.value].join(' или ')} гостей!`;
+
+const getGuestsErrorMessage = () =>
+  `Указанному колличеству гостей необходимо ${guestToRooms[roomCapacity.value].join(' или ')} комнаты!`;
 
 const onRoomTypeChange = () => {
   price.placeholder = apartPrice.minPrice[type.value];
@@ -84,57 +93,104 @@ const onCheckOutTimeChange = () => {
   checkOutTime.value = checkInTime.value;
 };
 
-const getUserFormValidation = () => {
-  const pristine = new Pristine(userForm, {
-    classTo: 'ad-form__element',
-    errorTextParent: 'ad-form__element',
-    errorTextClass: 'ad-form__element--invalid'
-  }, true
-  );
+const pristine = new Pristine(userForm, {
+  classTo: 'ad-form__element',
+  errorTextClass: 'ad-form__element--invalid',
+  errorTextParent: 'ad-form__element',
+}, true
+);
 
-  pristine.addValidator(
-    title,
-    validateTitle,
-    getTitleErrorMessage
-  );
+// const getUserFormValidation = () => {
 
-  pristine.addValidator(
-    price,
-    validatePrice,
-    getPriceErrorMessage
-  );
+pristine.addValidator(
+  title,
+  validateTitle,
+  getTitleErrorMessage
+);
 
-  pristine.addValidator(
-    roomNumber,
-    validateRoomsAndGuests,
-    getAccomodationErrorMessage
-  );
+// pristine.addValidator(
+//   price,
+//   validatePrice,
+//   getPriceErrorMessage
+// );
 
-  pristine.addValidator(
-    roomCapacity,
-    validateRoomsAndGuests,
-    getAccomodationErrorMessage
-  );
+pristine.addValidator(
+  roomNumber,
+  validateCapacity,
+  getRoomsErrorMessage
+);
 
-  checkInTime.addEventListener('change', onCheckOutTimeChange);
-  checkOutTime.addEventListener('change', onCheckInTimeChange);
+pristine.addValidator(
+  roomCapacity,
+  validateCapacity,
+  getGuestsErrorMessage
+);
 
-  type.addEventListener('change', () => {
-    onRoomTypeChange();
-    if (price.value) {
-      pristine.validate();
-    }
-  });
+const onRoomsNumberChange = () => {
+  pristine.validate(roomCapacity);
+  pristine.validate(roomNumber);
+};
 
+const onGuestsNumberChange = () => {
+  pristine.validate(roomNumber);
+  pristine.validate(roomCapacity);
+};
+
+roomNumber.addEventListener('change', onRoomsNumberChange);
+roomCapacity.addEventListener('change', onGuestsNumberChange);
+checkInTime.addEventListener('change', onCheckOutTimeChange);
+checkOutTime.addEventListener('change', onCheckInTimeChange);
+
+type.addEventListener('change', () => {
+  onRoomTypeChange();
+  if (price.value) {
+    pristine.validate();
+  }
+});
+
+
+const resetSlider = () => {
+  slider.noUiSlider.reset();
+};
+
+const resetForm = () => {
+  userForm.reset();
+};
+
+const resetPage = (evt) => {
+  if (evt) {
+    evt.preventDefault();
+  }
+
+  resetSlider();
+  resetForm();
+  pristine.reset();
+};
+
+reset.addEventListener('click', resetPage);
+
+const setUserFormSubmit = () => {
   userForm.addEventListener('submit', (evt) => {
     evt.preventDefault();
-    pristine.validate();
+
+    const isValid = pristine.validate();
+
+    if (isValid) {
+      blockSubmitButton();
+      sendData(
+        () => {
+          showSuccessMessage();
+          unblockSubmitButton();
+          resetPage();
+        },
+        () => {
+          showErrorMessage();
+          unblockSubmitButton();
+        },
+        new FormData(evt.target),
+      );
+    }
   });
 };
 
-reset.addEventListener('click', (evt) => {
-  evt.preventDefault();
-  slider.noUiSlider.reset();
-});
-
-export {getUserFormValidation};
+export {setUserFormSubmit, resetForm};
