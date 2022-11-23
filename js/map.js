@@ -1,7 +1,5 @@
 import {activeForm} from './form.js';
 import {renderAccomodationOffer} from './card.js';
-// import {getData} from './api.js';
-// import {createObjects} from './data.js';
 
 const TOKYO_CENTER = {
   lat: 35.68091,
@@ -14,6 +12,7 @@ const PIN_AMOUNT = 10;
 const map = L.map('map-canvas');
 const resetButton = document.querySelector('.ad-form__reset');
 const address = document.querySelector('#address');
+const markerGroup = L.layerGroup().addTo(map);
 
 const mainPin = L.icon({
   iconUrl: './img/main-pin.svg',
@@ -44,8 +43,9 @@ const loadMap = () => {
   ).addTo(map);
 };
 
-
 const createPins = (points) => {
+  markerGroup.clearLayers();
+
   points.slice(0, PIN_AMOUNT).forEach((point) => {
     const {lat, lng} = point.location;
     const marker = L.marker(
@@ -58,10 +58,9 @@ const createPins = (points) => {
       },
     );
     marker
-      .addTo(map)
+      .addTo(markerGroup)
       .bindPopup(renderAccomodationOffer(point));
   });
-
 };
 
 const mainMarker = L.marker(
@@ -87,7 +86,6 @@ resetButton.addEventListener('click', () => {
     lng: TOKYO_CENTER.lng,
   }, MAP_ZOOM);
 });
-
 
 mainMarker.on('moveend', (evt) => {
   const newAddress = evt.target.getLatLng();

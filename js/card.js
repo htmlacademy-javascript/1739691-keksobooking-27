@@ -17,12 +17,12 @@ const renderAccomodationOffer = (object) => {
   offerElement.querySelector('.popup__text--price').textContent = `${object.offer.price} ₽/ночь`;
   offerElement.querySelector('.popup__type').textContent = apartType[object.offer.type];
   offerElement.querySelector('.popup__description').textContent = object.offer.description;
-  offerElement.querySelector('.popup__text--capacity').textContent = `${object.offer.rooms} комнаты для ${object.offer.guest} гостей`;
+  offerElement.querySelector('.popup__text--capacity').textContent = `${object.offer.rooms} комнаты для ${object.offer.guests} гостей`;
   offerElement.querySelector('.popup__text--time').textContent = `Заезд после ${object.offer.checkin}, выезд до ${object.offer.checkout}`;
   offerElement.querySelector('.popup__avatar').src = object.author.avatar;
 
-  const photoList = card.querySelector('.popup__photos');
-  const photoItem = card.querySelector('.popup__photo');
+  const photoList = offerElement.querySelector('.popup__photos');
+  const photoItem = offerElement.querySelector('.popup__photo');
   if (object.offer.photos) {
     photoList.innerHTML = '';
     object.offer.photos.forEach((photo) => {
@@ -34,7 +34,7 @@ const renderAccomodationOffer = (object) => {
     photoList.style.display = 'none';
   }
 
-  const featureList = card.querySelectorAll('.popup__feature');
+  const featureList = offerElement.querySelectorAll('.popup__feature');
   if (object.offer.features) {
     featureList.forEach((featureItem) => {
       const isFeature = object.offer.features.some((element) => featureItem.classList.contains(`popup__feature--${element}`));
@@ -44,7 +44,7 @@ const renderAccomodationOffer = (object) => {
       }
     });
   } else {
-    card.querySelector('.popup__features').style.display = 'none';
+    offerElement.querySelector('.popup__features').style.display = 'none';
   }
 
   return offerElement;
