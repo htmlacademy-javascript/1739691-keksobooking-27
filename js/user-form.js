@@ -1,5 +1,7 @@
 import {blockSubmitButton, unblockSubmitButton, showSuccessMessage, showErrorMessage} from './util.js';
 import {sendData} from './api.js';
+import {resetPhotos} from './avatar.js';
+import {resetFilters} from './filters.js';
 
 const userForm = document.querySelector('.ad-form');
 const roomNumber = userForm.querySelector('#room_number');
@@ -65,9 +67,9 @@ const validateTitle = (value) =>
 const getTitleErrorMessage = () => `Длинна заголовка должна быть от 30 до 100 символов. Сейчас ${title.value.length} символов`;
 
 
-// const validatePrice = () => price.value >= apartPrice.minPrice[type.value] && price.value >= apartPrice.maxPrice[type.value];
+const validatePrice = () => price.value >= apartPrice.minPrice[type.value];
 
-// const getPriceErrorMessage = () => `Введите стоимость от ${apartPrice.minPrice[type.value]} до ${apartPrice.maxPrice}`;
+const getPriceErrorMessage = () => `Введите стоимость от ${apartPrice.minPrice[type.value]} до ${apartPrice.maxPrice}`;
 
 const validateCapacity = () => roomsToGuest[roomNumber.value].includes(roomCapacity.value);
 
@@ -100,19 +102,17 @@ const pristine = new Pristine(userForm, {
 }, true
 );
 
-// const getUserFormValidation = () => {
-
 pristine.addValidator(
   title,
   validateTitle,
   getTitleErrorMessage
 );
 
-// pristine.addValidator(
-//   price,
-//   validatePrice,
-//   getPriceErrorMessage
-// );
+pristine.addValidator(
+  price,
+  validatePrice,
+  getPriceErrorMessage
+);
 
 pristine.addValidator(
   roomNumber,
@@ -148,7 +148,6 @@ type.addEventListener('change', () => {
   }
 });
 
-
 const resetSlider = () => {
   slider.noUiSlider.reset();
 };
@@ -161,9 +160,10 @@ const resetPage = (evt) => {
   if (evt) {
     evt.preventDefault();
   }
-
+  resetPhotos();
   resetSlider();
   resetForm();
+  resetFilters();
   pristine.reset();
 };
 
