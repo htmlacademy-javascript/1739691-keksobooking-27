@@ -30,10 +30,12 @@ const showAlertMessage = (message) => {
 
 const blockSubmitButton = () => {
   submitButton.disabled = true;
+  submitButton.textContent = 'Отправляю...';
 };
 
 const unblockSubmitButton = () => {
   submitButton.disabled = false;
+  submitButton.textContent = 'Опубликовать';
 };
 
 const showSuccessMessage = () => {
@@ -77,13 +79,13 @@ const showErrorMessage = () => {
   );
 };
 
-function debounce (callback, timeoutDelay) {
+const debounce = (callback, timeoutDelay) => {
   let timeoutId;
 
   return (...rest) => {
     clearTimeout(timeoutId);
     timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
   };
-}
+};
 
 export {showAlertMessage, blockSubmitButton, unblockSubmitButton, showSuccessMessage, showErrorMessage, debounce};

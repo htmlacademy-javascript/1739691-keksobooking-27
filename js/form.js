@@ -12,7 +12,7 @@ const disableElements = (elements) => {
   });
 };
 
-const activeElements = (elements) => {
+const activateElements = (elements) => {
   elements.forEach((element) => {
     element.disabled = false;
   });
@@ -28,14 +28,14 @@ const disableForm = () => {
   disableElements(mapFiltersSelect);
 };
 
-const activeForm = () => {
+const activateForm = () => {
   adForm.classList.remove('ad-form--disabled');
   mapFilters.classList.remove('map__filters--disabled');
 
-  activeElements(adFormInput);
-  activeElements(adFormSelect);
-  activeElements(mapFiltersInput);
-  activeElements(mapFiltersSelect);
+  activateElements(adFormInput);
+  activateElements(adFormSelect);
+  activateElements(mapFiltersInput);
+  activateElements(mapFiltersSelect);
 };
 
-export {disableForm, activeForm};
+export {disableForm, activateForm};

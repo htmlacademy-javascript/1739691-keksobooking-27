@@ -1,5 +1,6 @@
-import {activeForm} from './form.js';
+import {activateForm} from './form.js';
 import {renderAccomodationOffer} from './card.js';
+import {getData} from './api.js';
 
 const TOKYO_CENTER = {
   lat: 35.68091,
@@ -8,6 +9,11 @@ const TOKYO_CENTER = {
 
 const MAP_ZOOM = 10;
 const PIN_AMOUNT = 10;
+const MAIN_PIN_SIZE = [52, 52];
+const MAIN_PIN_ANCHOR = [26, 52];
+const PIN_SIZE = [40, 40];
+const PIN_ANCHOR = [26, 52];
+
 
 const map = L.map('map-canvas');
 const resetButton = document.querySelector('.ad-form__reset');
@@ -16,19 +22,24 @@ const markerGroup = L.layerGroup().addTo(map);
 
 const mainPin = L.icon({
   iconUrl: './img/main-pin.svg',
-  iconSize: [52, 52],
-  iconAnchor: [26, 52],
+  iconSize: MAIN_PIN_SIZE,
+  iconAnchor: MAIN_PIN_ANCHOR,
 });
 
 const pin = L.icon({
   iconUrl: './img/pin.svg',
-  iconSize: [40, 40],
-  iconAnchor: [20, 40],
+  iconSize: PIN_SIZE,
+  iconAnchor: PIN_ANCHOR,
 });
+
+const setAddress = (coordinates) => {
+  address.value = `${(coordinates.lat).toFixed(5)}, ${(coordinates.lng).toFixed(5)}`;
+};
 
 const loadMap = () => {
   map.on('load', () => {
-    activeForm();
+    activateForm();
+    setAddress(TOKYO_CENTER);
   })
     .setView({
       lat: TOKYO_CENTER.lat,
@@ -85,12 +96,25 @@ resetButton.addEventListener('click', () => {
     lat: TOKYO_CENTER.lat,
     lng: TOKYO_CENTER.lng,
   }, MAP_ZOOM);
+  getData(createPins);
 });
 
 mainMarker.on('moveend', (evt) => {
   const newAddress = evt.target.getLatLng();
-  address.value = `${(newAddress.lat).toFixed(5)}, ${(newAddress.lng).toFixed(5)}`;
+  setAddress(newAddress);
 });
 
-export {loadMap, createPins};
+const resetMap = () => {
+  mainMarker.setLatLng({
+    lat: TOKYO_CENTER.lat,
+    lng: TOKYO_CENTER.lng,
+  });
+  map.setView({
+    lat: TOKYO_CENTER.lat,
+    lng: TOKYO_CENTER.lng,
+  }, MAP_ZOOM);
+  getData(createPins);
+};
+
+export {TOKYO_CENTER, loadMap, createPins, setAddress, resetMap};
 

@@ -2,6 +2,22 @@ import {blockSubmitButton, unblockSubmitButton, showSuccessMessage, showErrorMes
 import {sendData} from './api.js';
 import {resetPhotos} from './avatar.js';
 import {resetFilters} from './filters.js';
+import {TOKYO_CENTER, setAddress, resetMap} from './map.js';
+
+const MIN_TITLE_LENGTH = 30;
+const MAX_TITLE_LENGTH = 100;
+const PLACEHOLDER_VALUE = 5000;
+
+const ApartPrice = {
+  MIN_PRICE: {
+    bungalow: 0,
+    flat: 1000,
+    hotel: 3000,
+    house: 5000,
+    palace: 10000,
+  },
+  MAX_PRICE: 100000
+};
 
 const userForm = document.querySelector('.ad-form');
 const roomNumber = userForm.querySelector('#room_number');
@@ -14,21 +30,10 @@ const checkOutTime = userForm.querySelector('#timeout');
 const slider = document.querySelector('.ad-form__slider');
 const reset = document.querySelector('.ad-form__reset');
 
-const apartPrice = {
-  minPrice: {
-    bungalow: 0,
-    flat: 1000,
-    hotel: 3000,
-    house: 5000,
-    palace: 10000,
-  },
-  maxPrice: 100000
-};
-
 noUiSlider.create(slider, {
   range: {
     min: 0,
-    max: apartPrice.maxPrice
+    max: ApartPrice.MAX_PRICE
   },
   start: price.placeholder,
   step: 100,
@@ -62,14 +67,13 @@ const guestToRooms = {
 };
 
 const validateTitle = (value) =>
-  value.length >= 30 && value.length <= 100;
+  value.length >= MIN_TITLE_LENGTH && value.length <= MAX_TITLE_LENGTH;
 
 const getTitleErrorMessage = () => `Длинна заголовка должна быть от 30 до 100 символов. Сейчас ${title.value.length} символов`;
 
+const validatePrice = () => price.value >= ApartPrice.MIN_PRICE[type.value];
 
-const validatePrice = () => price.value >= apartPrice.minPrice[type.value];
-
-const getPriceErrorMessage = () => `Введите стоимость от ${apartPrice.minPrice[type.value]} до ${apartPrice.maxPrice}`;
+const getPriceErrorMessage = () => `Введите стоимость от ${ApartPrice.MIN_PRICE[type.value]} до ${ApartPrice.MAX_PRICE}`;
 
 const validateCapacity = () => roomsToGuest[roomNumber.value].includes(roomCapacity.value);
 
@@ -80,8 +84,8 @@ const getGuestsErrorMessage = () =>
   `Указанному колличеству гостей необходимо ${guestToRooms[roomCapacity.value].join(' или ')} комнаты!`;
 
 const onRoomTypeChange = () => {
-  price.placeholder = apartPrice.minPrice[type.value];
-  price.min = apartPrice.minPrice[type.value];
+  price.placeholder = ApartPrice.MIN_PRICE[type.value];
+  price.min = ApartPrice.MIN_PRICE[type.value];
   slider.noUiSlider.updateOptions({
     start: price.placeholder,
   });
@@ -156,6 +160,10 @@ const resetForm = () => {
   userForm.reset();
 };
 
+const resetPlaceholder = () => {
+  price.setAttribute('placeholder', PLACEHOLDER_VALUE);
+};
+
 const resetPage = (evt) => {
   if (evt) {
     evt.preventDefault();
@@ -163,7 +171,10 @@ const resetPage = (evt) => {
   resetPhotos();
   resetSlider();
   resetForm();
+  setAddress(TOKYO_CENTER);
+  resetPlaceholder();
   resetFilters();
+  resetMap();
   pristine.reset();
 };
 
@@ -193,4 +204,4 @@ const setUserFormSubmit = () => {
   });
 };
 
-export {setUserFormSubmit, resetForm};
+export {setUserFormSubmit};
