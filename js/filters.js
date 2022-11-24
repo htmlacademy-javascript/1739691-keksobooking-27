@@ -54,9 +54,9 @@ const getFilterFeatures = (object) => {
 const pageFilters = (object) => getFilterType(object) && getFilterPrice(object) && getFilterRooms(object) && getFilterGuests(object) && getFilterFeatures(object);
 
 const activateFilters = (offers) => {
-  const onFiltersChange = (debounce(() => createPins(offers.filter(pageFilters)), RENDER_DELAY,));
+  const onMapFiltersChange = (debounce(() => createPins(offers.filter(pageFilters)), RENDER_DELAY,));
 
-  mapFilters.addEventListener('change', onFiltersChange);
+  mapFilters.addEventListener('change', onMapFiltersChange);
 };
 
 const resetFilters = () => {
